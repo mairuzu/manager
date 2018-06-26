@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+
 import { connect } from 'react-redux';
+
 import { compose, pathOr } from 'ramda';
 
-import { withStyles, Theme, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
+import { StyleRulesCallback, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -15,17 +18,18 @@ import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+
+import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { weblishLaunch } from 'src/features/Weblish';
-import Grid from 'src/components/Grid';
-import CircleProgress from 'src/components/CircleProgress';
 
-import RegionIndicator from './RegionIndicator';
+import transitionStatus from '../linodeTransitionStatus';
+import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
-import { typeLabelDetails, displayType } from '../presentation';
-import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
+import RegionIndicator from './RegionIndicator';
 
 type CSSClasses =
   'customeMQ'
