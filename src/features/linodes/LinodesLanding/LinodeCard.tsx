@@ -17,14 +17,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { weblishLaunch } from 'src/features/Weblish';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
-import transitionStatus from '../linodeTransitionStatus';
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
@@ -173,7 +172,7 @@ interface Props {
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
   linodeSpecTransfer: number;
-  image?: Linode.Image;
+  imageLabel: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
@@ -208,6 +207,16 @@ class LinodeCard extends React.Component<CombinedProps> {
     );
   }
 
+  handleConsoleButtonClick = () => {
+    const { linodeId } = this.props;
+    weblishLaunch(`${linodeId}`);
+  }
+
+  handleRebootButtonClick = () => {
+    const { linodeId, linodeLabel, toggleConfirmation} = this.props;
+    toggleConfirmation('reboot', linodeId, linodeLabel);
+  }
+
   loadingState = () => {
     const { classes, linodeRecentEvent, linodeStatus } = this.props;
     const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
@@ -220,7 +229,7 @@ class LinodeCard extends React.Component<CombinedProps> {
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
-              {linodeStatus.replace('_', ' ')}
+              {transitionText(linodeStatus, linodeRecentEvent)}
             </Typography>
           </Grid>
         </Grid>
@@ -231,7 +240,7 @@ class LinodeCard extends React.Component<CombinedProps> {
   loadedState = () => {
     const {
       classes,
-      image,
+      imageLabel,
       linodeIpv4,
       linodeIpv6,
       linodeRegion,
@@ -255,11 +264,9 @@ class LinodeCard extends React.Component<CombinedProps> {
             <IPAddress ips={linodeIpv4} copyRight />
             <IPAddress ips={[linodeIpv6]} copyRight />
           </div>
-          {image &&
-            <div className={classes.cardSection} data-qa-image>
-              {image.label}
-            </div>
-          }
+          <div className={classes.cardSection} data-qa-image>
+            {imageLabel}
+          </div>
         </div>
       </CardContent>
     );
@@ -282,9 +289,9 @@ class LinodeCard extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel,
+    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
        linodeStatus, toggleConfirmation } = this.props;
-    const loading = transitionStatus.includes(linodeStatus);
+    const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -306,14 +313,14 @@ class LinodeCard extends React.Component<CombinedProps> {
                 />
               </div>
             }
-            className={`${classes.customeMQ}} ${'title'}`}
+            className={`${classes.customeMQ} ${'title'}`}
           />
           <Divider />
           {loading ? this.loadingState() : this.loadedState()}
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
-              onClick={() => weblishLaunch(`${linodeId}`)}
+              onClick={this.handleConsoleButtonClick}
               data-qa-console
             >
               Launch Console
@@ -321,7 +328,7 @@ class LinodeCard extends React.Component<CombinedProps> {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => toggleConfirmation('reboot', linodeId, linodeLabel)}
+              onClick={this.handleRebootButtonClick}
               data-qa-reboot
             >
               Reboot
