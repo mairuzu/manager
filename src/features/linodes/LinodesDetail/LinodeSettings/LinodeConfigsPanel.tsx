@@ -232,6 +232,14 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     confirmDiskDelete: this.defaultConfirmDiskDeleteState,
   };
 
+  componentDidMount() {
+    if (window.location.hash) {
+      const hashWithoutSymbol = window.location.hash.replace('#', '');
+      const elementToScrollTo = document.getElementById(hashWithoutSymbol);
+      if (elementToScrollTo) { elementToScrollTo.scrollIntoView() };
+    }
+  }
+
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
       linodeConfigs: nextProps.linodeConfigs,
@@ -259,6 +267,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           <ExpansionPanel
             defaultExpanded
             heading="Advanced Configurations"
+            id="configs"
             success={this.state.success}
           >
             <Grid
