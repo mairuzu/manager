@@ -29,4 +29,9 @@ describe('Email change form', () => {
     component.setProps({ loading: true });
     expect(component.find('[data-qa-email-change]')).toHaveLength(0);
   });
+
+  it('should render the timezone form', () => {
+    component.setProps({ loading: false});
+    expect(component.find('[data-qa-timezone-change]')).toHaveLength(1);
+  });
 });

@@ -21,14 +21,9 @@ const data = [
 ]
 
 class Example extends React.Component {
-  state = { open: false };
-
-  toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
-    this.setState({ open: v });
-  }
-
   handleSelect = (selected:any) => {
-    console.log(`${selected} has been selected`);
+    const item = selected ? selected.label : null;
+    console.log(`${item} has been selected`);
   }
 
   render() {

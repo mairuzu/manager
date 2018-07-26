@@ -64,6 +64,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
             <TimezoneForm
               timezone={timezone}
               updateProfile={updateProfile}
+              data-qa-timezone-change
             />
           </React.Fragment>
         }
