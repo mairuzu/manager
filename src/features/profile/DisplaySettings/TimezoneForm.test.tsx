@@ -22,11 +22,11 @@ describe('Timezone change form', () => {
     expect(component).toHaveLength(1);
   });
 
-  xit('should include text with the user\'s current time zone', () => {
-    expect(component.find('[data-qa-copy]').html()).toContain('Europe/San_Marino');
+  it('should include text with the user\'s current time zone', () => {
+    expect(component.find('[data-qa-copy]').html()).toContain('(GMT -11:00) Niue');
   });
 
-  xit('should have a select with the user\'s current timezone selected', () => {
-    expect(component.find('[data-qa-tz-select]').props().value).toBe('Europe/San_Marino');
+  it('should have a select that is blank by default', () => {
+    expect(component.find('[data-qa-tz-select]').props().value).toBe('');
   });
 });

@@ -107,6 +107,7 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.root}>
         <TextField
+          data-qa-select-input
           {...getInputProps({
             placeholder: placeholderText,
             errorText,
@@ -124,7 +125,10 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
           })}
         />
         {isOpen &&
-          <Paper className={classes.searchSuggestions}>
+          <Paper 
+            className={classes.searchSuggestions}
+            data-qa-suggestions-box
+          >
             {this.getSearchSuggestions(inputValue).map((suggestion:Item, index:number) => {
               return this.renderSuggestion(
                 suggestion,
@@ -155,8 +159,9 @@ class EnhancedSelect extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes}
-        key={index} 
-        {...itemProps} 
+        key={index}
+        {...itemProps}
+        data-qa-suggestion-item
       >
         {item.label}
       </div>

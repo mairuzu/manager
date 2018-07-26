@@ -34,9 +34,7 @@ interface ConnectedProps {
   updateProfile: (v: Linode.Profile) => void;
 }
 
-interface State {
-
-}
+interface State { }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
 
