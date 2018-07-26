@@ -21,9 +21,17 @@ const data = [
 ]
 
 class Example extends React.Component {
+  state = {
+    item: {
+      value: '',
+      label: '',
+    }
+  }
+
   handleSelect = (selected:any) => {
-    const item = selected ? selected.label : null;
-    console.log(`${item} has been selected`);
+    if (selected) {
+      this.setState({ item: selected });
+    }
   }
 
   render() {
@@ -31,9 +39,10 @@ class Example extends React.Component {
       <React.Fragment>
         <EnhancedSelect 
           options={data}
-          value={data[0].value}
+          value={this.state.item.value}
           handleSelect={this.handleSelect}
         />
+        <div data-qa-select-output>{this.state.item.label}</div>
       </React.Fragment>
     );
   }

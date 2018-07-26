@@ -41,4 +41,18 @@ describe('Enhanced Select', () => {
       suggestions = browser.elements(suggestionItem);
       expect(suggestions.value.length).toBe(0);
     });
+
+    it('should select the highlighted item on enter', () => {
+      browser.click('body');
+      browser.click(selectInputField);
+      browser.keys('PEAR');
+      browser.keys('ArrowDown');
+      browser.keys('Enter');
+      expect(browser.getValue(selectInputField)).toBe('Pear');
+    });
+
+    it('should set the selected item to state', () => {
+      const output = $('[data-qa-select-output]');
+      expect(output.getText()).toBe('Pear');
+    })
 });
