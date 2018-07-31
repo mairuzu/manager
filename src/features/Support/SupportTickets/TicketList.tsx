@@ -15,7 +15,7 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { getOpenTicketsPage } from 'src/services/support';
+import { getTicketsPage } from 'src/services/support';
 import capitalize from 'src/utilities/capitalize';
 import { formatString } from 'src/utilities/format-date-iso8601';
 
@@ -25,14 +25,13 @@ interface Props {
 
 interface State extends PaginationProps {
   errors?: Linode.ApiFieldError[];
-  tickets: Linode.SupportTicket[];
+  tickets?: Linode.SupportTicket[];
   loading: boolean;
 }
 
 class TicketList extends React.Component<Props, State> {
   mounted: boolean = false;
   state: State = {
-    tickets: [],
     errors: undefined,
     loading: true,
     page: 1,
@@ -43,6 +42,12 @@ class TicketList extends React.Component<Props, State> {
   componentDidMount() {
     this.mounted = true;
     this.getTickets();
+  }
+
+  componentDidUpdate(prevProps:Props, prevState:State) {
+    if (prevProps.filterStatus !== this.props.filterStatus) {
+      this.getTickets();
+    }
   }
 
   componentWillUnmount() {
@@ -77,9 +82,9 @@ class TicketList extends React.Component<Props, State> {
 
   getTickets = (page:number = this.state.page, pageSize:number = this.state.pageSize) => {
     const { tickets } = this.state;
-    this.setState({ errors: undefined, loading: tickets.length === 0});
+    this.setState({ errors: undefined, loading: tickets === undefined });
 
-    getOpenTicketsPage({ page_size: pageSize, page })
+    getTicketsPage({ page_size: pageSize, page }, this.props.filterStatus === 'open')
       .then((response) => {
         if (!this.mounted) { return; }
         
@@ -119,10 +124,10 @@ class TicketList extends React.Component<Props, State> {
     }
 
     if (errors) {
-      return <TableRowError colSpan={12} message="We were unable to load your support tickets." />
+      return <TableRowError colSpan={6} message="We were unable to load your support tickets." />
     }
-
-    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={12} />
+    
+    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={6} />
   };
 
   renderTickets = (tickets: Linode.SupportTicket[]) => tickets.map(this.renderRow);
