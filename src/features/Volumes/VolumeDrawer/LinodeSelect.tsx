@@ -125,6 +125,11 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   render() {
     const { error, name, onBlur } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
+    const d = {
+      label: 'Select a Linode',
+      value: 'none',
+    }
+    const finalLinodes = [d, ...linodes];
 
     return (
       <FormControl fullWidth>
@@ -133,10 +138,10 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           name={name}
           label="Linode"
           placeholder="Select a Linode"
-          value={this.getSelectedLinode(selectedLinodeId)}
+          value={this.getSelectedLinode(selectedLinodeId) || 'none'}
           isLoading={loading}
           errorText={error}
-          options={linodes}
+          options={finalLinodes}
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           data-qa-select-linode
