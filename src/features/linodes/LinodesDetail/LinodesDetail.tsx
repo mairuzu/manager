@@ -29,6 +29,7 @@ import {
 } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
+import getErrorString from 'src/utilities/getErrorString';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -497,12 +498,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         });
         sendToast('Linode upgrade has been initiated')
       })
-      .catch(() => {
+      .catch((errors) => {
+        console.log('error!', errors);
         this.setState({
           mutateDrawer: {
             ...mutateDrawer,
             loading: false,
-            error: 'Mutation could not be initiated. Please try again later.'
+            error: getErrorString(errors, 'Mutation could not be initiated.')
           }
         })
       });
