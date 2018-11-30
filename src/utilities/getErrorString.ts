@@ -1,8 +1,7 @@
-import { AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
 export const getErrorString = (
-  errors: AxiosResponse,
+  errors: Linode.ApiFieldError[],
   defaultError: string = "An unexpected error occurred."
   ) =>
     pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);

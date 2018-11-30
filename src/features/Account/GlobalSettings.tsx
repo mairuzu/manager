@@ -7,6 +7,7 @@ import ErrorState from 'src/components/ErrorState';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
+import { getErrorString } from 'src/utilities/getErrorString';
 import AutoBackups from './AutoBackups';
 import NetworkHelper from './NetworkHelper';
 
@@ -83,11 +84,7 @@ const displayError = (errors: Linode.ApiFieldError[] | undefined) => {
   if (!errors) {
     return;
   }
-  const errorText = pathOr(
-    "There was an error updating your account settings.",
-    ['response', 'data', 'errors', 0, 'reason'],
-    errors
-  );
+  const errorText = getErrorString(errors, "There was an error updating your account settings.");
 
   return sendToast(errorText, 'error');
 }

@@ -499,7 +499,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         sendToast('Linode upgrade has been initiated')
       })
       .catch((errors) => {
-        console.log('error!', errors);
+        console.log(errors);
         this.setState({
           mutateDrawer: {
             ...mutateDrawer,

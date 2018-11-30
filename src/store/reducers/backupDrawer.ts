@@ -6,6 +6,7 @@ import { updateAccountSettings } from 'src/services/account';
 import { enableBackups, getLinodes } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
 import { getAll } from 'src/utilities/getAll';
+import { getErrorString } from 'src/utilities/getErrorString';
 
 // HELPERS
 
@@ -172,8 +173,7 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: num
     success: [...accumulator.success, linodeId]
     }))
     .catch((error) => {
-      const reason = pathOr('Backups could not be enabled for this Linode.',
-        ['response','data','errors', 0, 'reason'], error);
+      const reason = getErrorString(error, 'Backups could not be enabled for this Linode.');
       return {
       ...accumulator,
       errors: [...accumulator.errors, { linodeId, reason }]
@@ -218,8 +218,7 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
       dispatch(handleUpdate(response));
     })
     .catch((errors) => {
-      const defaultError = "Your account settings could not be updated. Please try again.";
-      const finalError =  pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
-      dispatch(handleAutoEnrollError(finalError));
+      const error = getErrorString(errors, "Your account settings could not be updated. Please try again.");
+      dispatch(handleAutoEnrollError(error));
     });
 }
