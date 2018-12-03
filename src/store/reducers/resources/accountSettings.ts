@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { compose, Dispatch } from 'redux';
 
 import { getAccountSettings, updateAccountSettings as _update} from 'src/services/account';
@@ -6,7 +7,7 @@ import { getAccountSettings, updateAccountSettings as _update} from 'src/service
 
 interface Action {
   type: string;
-  error?: Error;
+  error?: AxiosError;
   data?: any;
 }
 
@@ -22,13 +23,13 @@ export const UPDATE_ERROR = '@manager/account/UPDATE_ERROR'
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
 
-export const handleError: ActionCreator = (error: Error) => ({ type: ERROR, error });
+export const handleError: ActionCreator = (error: AxiosError) => ({ type: ERROR, error });
 
 export const handleSuccess: ActionCreator = (data: Linode.AccountSettings) => ({ type: SUCCESS, data });
 
 export const handleUpdate: ActionCreator = (data: Linode.AccountSettings) => ({ type: UPDATE, data });
 
-export const handleUpdateError: ActionCreator = (error: Error) => ({ type: UPDATE_ERROR, error });
+export const handleUpdateError: ActionCreator = (error: AxiosError) => ({ type: UPDATE_ERROR, error });
 
 
 // DEFAULT STATE

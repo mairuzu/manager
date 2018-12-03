@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -22,7 +23,7 @@ interface StateProps {
   backups_enabled: boolean;
   error?: Error;
   linodesWithoutBackups: Linode.Linode[];
-  updateError?: Linode.ApiFieldError[];
+  updateError?: AxiosError;
   networkHelperEnabled: boolean;
 }
 
@@ -80,7 +81,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
   }
 }
 
-const displayError = (errors: Linode.ApiFieldError[] | undefined) => {
+const displayError = (errors: AxiosError | undefined) => {
   if (!errors) {
     return;
   }
