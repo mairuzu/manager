@@ -7,7 +7,11 @@ import TableCell from 'src/components/TableCell';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
-type ClassNames = 'root' | 'link' | 'loadingStatus' | 'labelWrapper';
+type ClassNames = 'root'
+| 'link'
+| 'loadingStatus'
+| 'labelWrapper'
+| 'linodeDescription';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -28,7 +32,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
-  }
+  },
+  linodeDescription: {
+    paddingTop: theme.spacing.unit / 2,
+  },
 });
 
 interface Props {
@@ -78,7 +85,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
               <Typography role="header" variant="h3" data-qa-label>
                 {linodeLabel}
               </Typography>
-              <Typography>
+              <Typography className={classes.linodeDescription}>
                 {linodeDescription}
               </Typography>
             </div>
