@@ -11,14 +11,9 @@ export const defaultState = {
   accountSettings: defaultAccountSettingsState,
   profile: defaultProfileState,
   domains: defaultDomainsState,
-  images: defaultImagesState,
   linodes: defaultLinodesState,
   types: defaultTypesState,
   images: defaultImagesState,
 }
 
-<<<<<<< HEAD
 export default combineReducers({ accountSettings, profile, domains, linodes, types, images });
-=======
-export default combineReducers({ accountSettings, profile, domains, images, linodes, types });
->>>>>>> Images cache in Redux
