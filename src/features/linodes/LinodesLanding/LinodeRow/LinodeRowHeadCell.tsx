@@ -4,11 +4,10 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
-import Tags from 'src/components/Tags';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
-type ClassNames = 'root' | 'link' | 'tagWrapper' | 'loadingStatus' | 'labelWrapper';
+type ClassNames = 'root' | 'link' | 'loadingStatus' | 'labelWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -27,10 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '100%'
     },
   },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    marginLeft: theme.spacing.unit * 4,
-  },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
   }
@@ -38,10 +33,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   loading: boolean;
+  linodeDescription: string;
   linodeId: number;
   linodeLabel: string;
   linodeStatus: Linode.LinodeStatus;
-  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
 }
 
@@ -50,10 +45,10 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
+    linodeDescription,
     linodeId,
     linodeLabel,
     linodeStatus,
-    linodeTags,
     loading,
     linodeRecentEvent,
   } = props;
@@ -83,12 +78,12 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
               <Typography role="header" variant="h3" data-qa-label>
                 {linodeLabel}
               </Typography>
+              <Typography>
+                {linodeDescription}
+              </Typography>
             </div>
           </Grid>
         </Grid>
-        <div className={classes.tagWrapper}>
-          <Tags tags={linodeTags} />
-        </div>
       </Link>
     </TableCell>
   );

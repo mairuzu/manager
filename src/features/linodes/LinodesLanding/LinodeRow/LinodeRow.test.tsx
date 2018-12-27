@@ -23,6 +23,13 @@ describe('LinodeRow', () => {
     openConfigDrawer: jest.fn(),
     mutationAvailable: false,
     mostRecentBackup: undefined,
+    linodeImage: null,
+    linodeSpecs: {
+      memory: 0,
+      vcpus: 0,
+      disk: 0,
+      transfer: 0
+    },
     linodeType: 'whatever',
     linodeTags: [],
     linodeStatus: 'running',
@@ -36,7 +43,8 @@ describe('LinodeRow', () => {
       enabled: false,
       schedule: { day: 'Friday', window: 'W0' },
     },
-    displayType: 'Some Fancy Name'
+    displayType: 'Some Fancy Name',
+    images: [],
   };
 
   const mockNotification: Linode.Notification = {

@@ -218,6 +218,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+<<<<<<< HEAD
     const { actions } = this.props;
 
     actions.requestDomains();
@@ -227,6 +228,22 @@ export class App extends React.Component<CombinedProps, State> {
     actions.requestProfile();
     actions.requestSettings();
     actions.requestTypes();
+=======
+    const {
+      getAccountSettings,
+      getNotifications,
+      getProfile,
+      requestImages,
+      requestDomains,
+      requestLinodes,
+      requestTypes
+    } = this.props.actions;
+
+    requestDomains();
+    requestLinodes();
+    requestTypes();
+    requestImages();
+>>>>>>> Images cache in Redux
 
     /*
      * We want to listen for migration events side-wide
@@ -380,6 +397,7 @@ interface DispatchProps {
     requestProfile: () => void;
     requestSettings: () => void;
     requestTypes: () => void;
+    requestImages: () => void;
   },
 }
 
@@ -393,6 +411,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestImages: () => dispatch(imagesAsync.requestImages()),
     }
   };
 };
