@@ -38,7 +38,6 @@ it('renders without crashing', () => {
               requestProfile: jest.fn(),
               requestSettings: jest.fn(),
               requestTypes: jest.fn(),
-              requestImages: jest.fn(),
             }}
             documentation={[]}
             toggleTheme={jest.fn()}
