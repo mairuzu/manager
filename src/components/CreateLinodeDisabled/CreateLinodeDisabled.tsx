@@ -13,7 +13,8 @@ export const CreateLinodeDisabled: React.StatelessComponent<Props> = props => {
   return (
     <Notice
       text={
-        "You don't have permissions to create a new Linode. Please, contact an account administrator for details."
+        "You don't have permission to create a new Linode. Please contact an account administrator for details."
+        // If this isn't officially approved text, I would prefer "Your user account is not authorized to create a new Linode. Please...."
       }
       error={true}
     />
