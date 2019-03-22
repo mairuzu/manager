@@ -19,7 +19,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import * as countryRegionItems from './countryRegionData.json';
+import countryRegionItems from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -152,19 +152,18 @@ class UpdateContactInformationPanel extends React.Component<
     );
 
     const generalError = hasErrorFor('none');
-
-    const countryResults = countryRegionItems.default.map((country: any) => {
+    console.log(countryRegionItems);
+    const countryResults = countryRegionItems.map((country: any) => {
       return {
         value: country.countryShortCode,
         label: country.countryName
       };
     });
 
-    const currentCountryResult = countryRegionItems.default.filter(
-      (country: any) =>
-        fields.country
-          ? country.countryShortCode === fields.country
-          : country.countryShortCode === account.country
+    const currentCountryResult = countryRegionItems.filter((country: any) =>
+      fields.country
+        ? country.countryShortCode === fields.country
+        : country.countryShortCode === account.country
     );
 
     const regionResults = currentCountryResult[0]['regions'].map(
@@ -341,7 +340,6 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <EnhancedSelect
                 label="State / Province"
-                defaultInputValue={defaultTo(account.state, fields.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 data-qa-contact-province
@@ -370,7 +368,6 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <EnhancedSelect
             label="Country"
-            defaultInputValue={defaultTo(account.country, fields.country)}
             errorText={hasErrorFor('country')}
             onChange={this.updateCountry}
             data-qa-contact-country
