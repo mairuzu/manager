@@ -51,7 +51,7 @@ interface State {
 }
 
 interface LinodesProps {
-  linodesError: boolean;
+  linodesError?: boolean;
 }
 
 type CombinedProps = Props &
