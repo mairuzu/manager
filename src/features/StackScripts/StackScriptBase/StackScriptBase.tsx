@@ -468,7 +468,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 aria-label="List of StackScripts"
                 noOverflow={true}
                 tableClass={classes.table}
-                removeLabelonMobile={false}
+                removeLabelonMobile={true}
               >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}
