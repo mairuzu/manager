@@ -106,12 +106,17 @@ const interceptNotification = (
     /** replace "this Linode" with the name of the Linode */
     return {
       ...notification,
-      label: `Maintenance Scheduled`,
+      label: notification.label
+        .toLowerCase()
+        .replace(
+          'this linode',
+          pathOr('this Linode', ['label'], notification.entity)
+        ),
       message: notification.message
         .toLowerCase()
         .replace(
           'this linode',
-          `Linode ${pathOr('this Linode', ['label'], notification.entity)}`
+          pathOr('this Linode', ['label'], notification.entity)
         )
     };
   }
