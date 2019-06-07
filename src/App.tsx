@@ -37,7 +37,10 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
-import { requestLinodes } from 'src/store/linodes/linode.requests';
+import {
+  initialRequest,
+  requestLinodes
+} from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
@@ -253,7 +256,7 @@ export class App extends React.Component<CombinedProps, State> {
       this.props.requestProfile(),
       this.props.requestDomains(),
       this.props.requestImages(),
-      this.props.requestLinodes(),
+      this.props.initialRequestLinodes(),
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
@@ -304,6 +307,13 @@ export class App extends React.Component<CombinedProps, State> {
     if (notifications.welcome.get() === 'open') {
       this.setState({ welcomeBanner: true });
     }
+
+    /**
+     * Everything has loaded, so now we can request
+     * the remaining Linodes and load them in the background.
+     */
+
+    this.props.requestLinodes();
   }
 
   closeMenu = () => {
@@ -505,6 +515,7 @@ interface DispatchProps {
   requestDomains: () => Promise<Linode.Domain[]>;
   requestImages: () => Promise<Linode.Image[]>;
   requestLinodes: () => Promise<Linode.Linode[]>;
+  initialRequestLinodes: () => Promise<Linode.Linode[]>;
   requestNotifications: () => Promise<Linode.Notification[]>;
   requestProfile: () => Promise<Linode.Profile>;
   requestSettings: () => Promise<Linode.AccountSettings>;
@@ -535,6 +546,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
     requestVolumes: () => dispatch(getAllVolumes()),
     requestBuckets: () => dispatch(getAllBuckets()),
     requestClusters: () => dispatch(requestClusters()),
+    initialRequestLinodes: () => dispatch(initialRequest()),
     addNotificationsToLinodes: (
       _notifications: Linode.Notification[],
       linodes: Linode.Linode[]
