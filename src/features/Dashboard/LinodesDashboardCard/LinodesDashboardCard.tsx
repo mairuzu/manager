@@ -95,7 +95,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
 
   renderContent = () => {
     const { loading, linodes, error } = this.props;
-    if (loading) {
+    if (loading && linodes.length === 0) {
       return this.renderLoading();
     }
 
