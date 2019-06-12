@@ -23,7 +23,7 @@ import { getKubeConfig } from 'src/services/kubernetes';
 import { UpdateClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { extendCluster } from '.././kubeUtils';
+import { extendCluster, getPoolUpdateGroups } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
@@ -106,6 +106,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [count, setCount] = React.useState<number>(1);
   /** For adding tags */
   const [tags, updateTags] = React.useState<string[]>([]);
+  /** Form submission */
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
 
   React.useEffect(() => {
     /**
@@ -128,6 +131,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   if (cluster === null) {
     return null;
   }
+
+  const submitForm = () => {
+    /** Fasten your seat belts... */
+  };
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
     updatePools(prevPools => update(poolIdx, updatedPool, prevPools));
