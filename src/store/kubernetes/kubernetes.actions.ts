@@ -15,11 +15,11 @@ export const addOrUpdateCluster = actionCreator<Linode.KubernetesCluster>(
 export const upsertCluster = actionCreator<Linode.KubernetesCluster>(`upsert`);
 
 export interface ClusterID {
-  clusterID: string;
+  clusterID: number;
 }
 
 export interface NodePoolID {
-  nodePoolID: string;
+  nodePoolID: number;
 }
 
 export type UpdateClusterParams = ClusterID & Partial<Linode.KubernetesCluster>;

@@ -127,6 +127,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Add pool and reset form state.
      */
     addNodePool({
+      id: 0,
       type: selectedType,
       count: nodeCount,
       totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)

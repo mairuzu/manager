@@ -1,5 +1,6 @@
+import * as Bluebird from 'bluebird';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, remove, update } from 'ramda';
+import { contains, path, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -16,14 +17,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
-import KubeContainer from 'src/containers/kubernetes.container';
+import KubeContainer, { DispatchProps } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
-import { UpdateClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { extendCluster, getPoolUpdateGroups } from '.././kubeUtils';
+import { extendCluster } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
@@ -71,15 +71,13 @@ interface KubernetesContainerProps {
   cluster: ExtendedCluster | null;
   clustersLoading: boolean;
   lastUpdated: number;
-  requestKubernetesClusters: () => void;
-  requestClusterForStore: (clusterID: string) => void;
-  updateCluster: (params: UpdateClusterParams) => void;
 }
 
 type CombinedProps = WithTypesProps &
   RouteComponentProps<{ clusterID: string }> &
   KubernetesContainerProps &
   WithSnackbarProps &
+  DispatchProps & 
   WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
@@ -108,7 +106,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
+  // const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
 
   React.useEffect(() => {
     /**
@@ -121,7 +119,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       props.requestKubernetesClusters();
     } else {
       const clusterID = props.match.params.clusterID;
-      props.requestClusterForStore(clusterID);
+      props.requestClusterForStore(+clusterID);
     }
   }, []);
 
@@ -134,6 +132,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   const submitForm = () => {
     /** Fasten your seat belts... */
+    setSubmitting(true);
+    Bluebird.map(pools, (thisPool) => {
+      if (thisPool.queuedForAddition) {
+        props.createNodePool({ clusterID: cluster.id, ...thisPool });
+      } else if (thisPool.queuedForDeletion) {
+        props.deleteNodePool(cluster.id, thisPool.id)
+      } else if (!contains(thisPool, cluster.node_pools)) {
+        props.updateNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id, ...thisPool })
+      } else {
+        return;
+      }
+    }).then(() => {
+      setSubmitting(false);
+    });
+    console.log(submitting);
   };
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
@@ -335,7 +348,7 @@ const withCluster = KubeContainer<
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
 >((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
   const thisCluster = clustersData.find(
-    c => c.id === ownProps.match.params.clusterID
+    c => c.id === +ownProps.match.params.clusterID
   );
   const cluster = thisCluster
     ? extendCluster(thisCluster, ownProps.typesData || [])

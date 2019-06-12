@@ -37,7 +37,7 @@ export const extendCluster = (
   cluster: Linode.KubernetesCluster,
   types: ExtendedType[]
 ): ExtendedCluster => {
-  const pools = cluster.node_pools;
+  const pools = responseToExtendedNodePool(cluster.node_pools);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
   const extendedPools: ExtendedPoolNode[] = pools.map(thisPool => ({
     ...thisPool,
@@ -81,6 +81,15 @@ export const getTotalClusterMemoryAndCPU = (
     { RAM: 0, CPU: 0 }
   );
 };
+
+export const responseToExtendedNodePool = (pools: Linode.KubeNodePoolResponse[]): ExtendedPoolNode[] => {
+  return pools.map(thisPool => ({
+    id: thisPool.id,
+    count: thisPool.count,
+    type: thisPool.type,
+    totalMonthlyPrice: 0
+  }))
+}
 
 /** getPoolUpdateGroups
  *

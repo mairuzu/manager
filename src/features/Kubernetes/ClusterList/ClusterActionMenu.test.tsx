@@ -15,7 +15,7 @@ requests.getKubeConfig = jest
   .mockResolvedValueOnce({ kubeconfig: 'SSBhbSBhIHRlYXBvdA==' });
 
 const props = {
-  clusterId: '123456',
+  clusterId: 123456,
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn()
 };

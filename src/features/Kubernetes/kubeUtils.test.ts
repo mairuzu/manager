@@ -15,12 +15,14 @@ import {
 } from './kubeUtils';
 
 const mockNodePool = {
+  id: 6,
   type: extendedTypes[0].id,
   count: 4,
   totalMonthlyPrice: 10
 };
 
 const badNodePool = {
+  id: 7,
   type: 'not-a-real-type',
   count: 1,
   totalMonthlyPrice: 0

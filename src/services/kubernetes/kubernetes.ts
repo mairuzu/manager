@@ -62,7 +62,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
  * Create a new Cluster.
  */
 export const updateKubernetesCluster = (
-  clusterID: string,
+  clusterID: number,
   data: Partial<Linode.KubernetesCluster>
 ) =>
   Request<Linode.KubernetesCluster>(
@@ -76,7 +76,7 @@ export const updateKubernetesCluster = (
  *
  * Delete the specified Cluster.
  */
-export const deleteKubernetesCluster = (clusterID: string) =>
+export const deleteKubernetesCluster = (clusterID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
@@ -88,7 +88,7 @@ export const deleteKubernetesCluster = (clusterID: string) =>
  * Adds a node pool to the specified cluster.
  */
 export const createNodePool = (
-  clusterID: string,
+  clusterID: number,
   data: Linode.PoolNodeRequest
 ) =>
   Request<Page<Linode.KubeNodePoolResponse>>(
@@ -103,8 +103,8 @@ export const createNodePool = (
  * Change the type or count of a node pool
  */
 export const updateNodePool = (
-  clusterID: string,
-  nodePoolID: string,
+  clusterID: number,
+  nodePoolID: number,
   data: Linode.PoolNodeRequest
 ) =>
   Request<Page<Linode.KubeNodePoolResponse>>(
@@ -118,7 +118,7 @@ export const updateNodePool = (
  *
  * Delete a single node pool from the specified Cluster.
  */
-export const deleteNodePool = (clusterID: string, nodePoolID: string) =>
+export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
@@ -131,7 +131,7 @@ export const deleteNodePool = (clusterID: string, nodePoolID: string) =>
  * @param clusterId
  */
 
-export const getKubeConfig = (clusterId: string) =>
+export const getKubeConfig = (clusterId: number) =>
   Request<Linode.KubeConfigResponse>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
