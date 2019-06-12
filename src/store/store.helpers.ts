@@ -140,7 +140,6 @@ export const createRequestThunk = <Req, Res, Err>(
     dispatch(doneAction);
     return result;
   } catch (error) {
-    console.log(error);
     const failAction = failed({ error, params });
 
     dispatch(failAction);
