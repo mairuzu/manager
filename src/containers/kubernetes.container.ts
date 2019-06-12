@@ -4,6 +4,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import {
   CreateNodePoolParams,
+  DeleteNodePoolParams,
   UpdateClusterParams,
   UpdateNodePoolParams
 } from 'src/store/kubernetes/kubernetes.actions';
@@ -30,7 +31,7 @@ export interface DispatchProps {
   updateCluster: (params: UpdateClusterParams) => void;
   createNodePool: (params: CreateNodePoolParams) => void;
   updateNodePool: (params: UpdateNodePoolParams) => void;
-  deleteNodePool: (clusterID: number, nodePoolID: number) => void;
+  deleteNodePool: (params: DeleteNodePoolParams) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -45,7 +46,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatch(_createNodePool(params)),
   updateNodePool: (params: UpdateNodePoolParams) =>
     dispatch(_updateNodePool(params)),
-  deleteNodePool: (clusterID: number, nodePoolID: number) => dispatch(_deleteNodePool(clusterID, nodePoolID))
+  deleteNodePool: (params: DeleteNodePoolParams) => dispatch(_deleteNodePool(params))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

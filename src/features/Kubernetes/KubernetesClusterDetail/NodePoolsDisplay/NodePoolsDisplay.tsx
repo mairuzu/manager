@@ -35,6 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   editing: boolean;
+  submittingForm: boolean;
   pools: ExtendedPoolNode[];
   poolsForEdit: ExtendedPoolNode[];
   types: ExtendedType[];
@@ -42,6 +43,7 @@ interface Props {
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
   deletePool: (poolID: number) => void;
   resetForm: () => void;
+  submitForm: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -49,7 +51,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, deletePool, editing, pools, poolsForEdit, resetForm, toggleEditing, types, updatePool } = props;
+  const { classes, deletePool, editing, pools, poolsForEdit, resetForm, submitForm, submittingForm, toggleEditing, types, updatePool } = props;
 
   return (
     <Paper className={classes.root}>
@@ -92,7 +94,9 @@ export const NodePoolsDisplay: React.FunctionComponent<
             <Button
               className={classes.button}
               type="primary"
-              disabled={!editing}
+              disabled={!editing || submittingForm}
+              loading={submittingForm}
+              onClick={submitForm}
             >
               Save
             </Button>

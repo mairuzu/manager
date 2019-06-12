@@ -51,8 +51,9 @@ export const deleteClusterActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`delete-cluster`);
 
+export type DeleteNodePoolParams = ClusterID & NodePoolID;
 export const deleteNodePoolActions = actionCreator.async<
-  ClusterID & NodePoolID,
+  DeleteNodePoolParams,
   {},
   Linode.ApiFieldError[]
 >(`delete-node-pool`);

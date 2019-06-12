@@ -106,7 +106,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  // const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
+  const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
 
   React.useEffect(() => {
     /**
@@ -135,18 +135,27 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setSubmitting(true);
     Bluebird.map(pools, (thisPool) => {
       if (thisPool.queuedForAddition) {
-        props.createNodePool({ clusterID: cluster.id, ...thisPool });
+        // This pool doesn't exist and needs to be added.
+        return props.createNodePool({ clusterID: cluster.id, ...thisPool });
       } else if (thisPool.queuedForDeletion) {
-        props.deleteNodePool(cluster.id, thisPool.id)
+        // Marked for deletion
+        return props.deleteNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id})
       } else if (!contains(thisPool, cluster.node_pools)) {
-        props.updateNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id, ...thisPool })
+        // User has adjusted the count for this pool. Needs to be pushed through to the API.
+        return props.updateNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id, ...thisPool })
       } else {
-        return;
+        // Nothing has changed about this node, so don't make any requests.
+        return Promise.resolve();
       }
-    }).then(() => {
-      setSubmitting(false);
-    });
-    console.log(submitting);
+    })
+      .then(() => {
+        setSubmitting(false);
+        resetFormState();
+      })
+      .catch(err => {
+        setErrors(getAPIErrorOrDefault(err, 'Some actions could not be completed. Please reload the page and try again.'));
+        setSubmitting(false);
+      });
   };
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
@@ -277,6 +286,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         <Grid container item direction="column" xs={9}>
           <Grid item>
             <NodePoolsDisplay
+              submittingForm={submitting}
+              submitForm={submitForm}
               editing={editing}
               toggleEditing={toggleEditing}
               updatePool={updatePool}
@@ -348,7 +359,7 @@ const withCluster = KubeContainer<
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
 >((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
   const thisCluster = clustersData.find(
-    c => c.id === +ownProps.match.params.clusterID
+    c => c.id == +ownProps.match.params.clusterID
   );
   const cluster = thisCluster
     ? extendCluster(thisCluster, ownProps.typesData || [])
