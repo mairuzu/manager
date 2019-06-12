@@ -177,7 +177,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           )
         );
         setSubmitting(false);
-        // setEditing(false);
+        setEditing(false);
       });
   };
 
@@ -190,8 +190,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   };
 
   const toggleEditing = () => {
+    /**
+     * Regardless of whether we're going into or out of editing mode,
+     * reset everything.
+     */
+
     updatePools(cluster.node_pools);
     setEditing(!editing);
+    setSuccess(false);
+    setErrors(undefined);
   };
 
   const handleAddNodePool = (pool: ExtendedPoolNode) => {
