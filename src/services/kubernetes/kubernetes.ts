@@ -107,7 +107,7 @@ export const updateNodePool = (
   nodePoolID: number,
   data: Linode.PoolNodeRequest
 ) =>
-  Request<Page<Linode.KubeNodePoolResponse>>(
+  Request<Linode.KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
     setData(data, nodePoolSchema)

@@ -41,7 +41,7 @@ export type UpdateNodePoolParams = ClusterID &
   Linode.PoolNodeRequest;
 export const updateNodePoolActions = actionCreator.async<
   UpdateNodePoolParams,
-  Linode.KubeNodePoolResponse[],
+  Linode.KubeNodePoolResponse,
   Linode.ApiFieldError[]
 >(`update-node-pool`);
 

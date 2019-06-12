@@ -73,5 +73,5 @@ export const createNodePool = createRequestThunk(
 export const updateNodePool = createRequestThunk(
   updateNodePoolActions,
   ({ clusterID, nodePoolID, ...data }) =>
-    _updateNodePool(clusterID, nodePoolID, data).then(response => response.data)
+    _updateNodePool(clusterID, nodePoolID, data)
 );

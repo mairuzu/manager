@@ -35,6 +35,6 @@ describe('Kubernetes cluster action menu', () => {
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
     fireEvent.click(getByText(/download/i));
-    expect(requests.getKubeConfig).toHaveBeenCalledWith('123456');
+    expect(requests.getKubeConfig).toHaveBeenCalledWith(123456);
   });
 });

@@ -82,7 +82,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, createNodePoolActions.done)) {
     const { result } = action.payload;
     const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result[0].lke_id
+      thisCluster => +thisCluster.id === result[0].lkeid
     );
     if (!cluster) {
       return state;
@@ -101,17 +101,34 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, updateNodePoolActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        update: error
+      }
+    };
+  }
+
   if (isType(action, updateNodePoolActions.done)) {
     const { result } = action.payload;
     const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result[0].lke_id
+      thisCluster => +thisCluster.id === result.lkeid
     );
     if (!cluster) {
       return state;
     }
+
+    const updatedNodePools = cluster.node_pools.map(thisPool => {
+      return thisPool.id === result.id ? result : thisPool;
+    });
+
     const updatedCluster = {
       ...cluster,
-      node_pools: result
+      node_pools: updatedNodePools
     };
 
     const update = updateOrAdd(updatedCluster, state.entities);

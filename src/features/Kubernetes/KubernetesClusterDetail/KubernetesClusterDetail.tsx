@@ -109,7 +109,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [generalError, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
+  const [generalError, setErrors] = React.useState<
+    Linode.ApiFieldError[] | undefined
+  >(undefined);
+  const [success, setSuccess] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     /**
@@ -136,6 +139,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const submitForm = () => {
     /** Fasten your seat belts... */
     setSubmitting(true);
+    setErrors(undefined);
+    setSuccess(false);
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
         // This pool doesn't exist and needs to be added.
@@ -151,14 +156,16 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         return props.updateNodePool({
           clusterID: cluster.id,
           nodePoolID: thisPool.id,
-          ...thisPool
+          count: thisPool.count,
+          type: thisPool.type
         });
       } else {
         // Nothing has changed about this node, so don't make any requests.
-        return Promise.resolve();
+        return;
       }
     })
       .then(() => {
+        setSuccess(true);
         setSubmitting(false);
         setEditing(false);
       })
@@ -170,6 +177,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           )
         );
         setSubmitting(false);
+        // setEditing(false);
       });
   };
 
@@ -303,6 +311,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             <NodePoolsDisplay
               submittingForm={submitting}
               submitForm={submitForm}
+              submissionSuccess={success}
+              submissionError={generalError}
               editing={editing}
               toggleEditing={toggleEditing}
               updatePool={updatePool}
