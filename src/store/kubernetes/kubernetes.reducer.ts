@@ -147,7 +147,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       return state;
     }
     const nodePools = cluster.node_pools.filter(
-      thisPool => +thisPool.id === +nodePoolID
+      thisPool => thisPool.id !== nodePoolID
     );
     const updatedCluster = { ...cluster, node_pools: nodePools };
     const update = updateOrAdd(updatedCluster, state.entities);

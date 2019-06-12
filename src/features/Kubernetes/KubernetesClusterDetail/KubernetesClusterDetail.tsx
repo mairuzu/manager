@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -17,7 +18,9 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
-import KubeContainer, { DispatchProps } from 'src/containers/kubernetes.container';
+import KubeContainer, {
+  DispatchProps
+} from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
@@ -77,7 +80,7 @@ type CombinedProps = WithTypesProps &
   RouteComponentProps<{ clusterID: string }> &
   KubernetesContainerProps &
   WithSnackbarProps &
-  DispatchProps & 
+  DispatchProps &
   WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
@@ -123,8 +126,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     }
   }, []);
 
-  if (clustersLoading && lastUpdated !== 0) {
-    return <div>'loading...'</div>;
+  if ((clustersLoading && lastUpdated !== 0) || typesLoading) {
+    return <CircleProgress />;
   }
   if (cluster === null) {
     return null;
@@ -133,16 +136,23 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const submitForm = () => {
     /** Fasten your seat belts... */
     setSubmitting(true);
-    Bluebird.map(pools, (thisPool) => {
+    Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
         // This pool doesn't exist and needs to be added.
         return props.createNodePool({ clusterID: cluster.id, ...thisPool });
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
-        return props.deleteNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id})
+        return props.deleteNodePool({
+          clusterID: cluster.id,
+          nodePoolID: thisPool.id
+        });
       } else if (!contains(thisPool, cluster.node_pools)) {
         // User has adjusted the count for this pool. Needs to be pushed through to the API.
-        return props.updateNodePool({ clusterID: cluster.id, nodePoolID: thisPool.id, ...thisPool })
+        return props.updateNodePool({
+          clusterID: cluster.id,
+          nodePoolID: thisPool.id,
+          ...thisPool
+        });
       } else {
         // Nothing has changed about this node, so don't make any requests.
         return Promise.resolve();
@@ -150,10 +160,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     })
       .then(() => {
         setSubmitting(false);
-        resetFormState();
+        setEditing(false);
       })
       .catch(err => {
-        setErrors(getAPIErrorOrDefault(err, 'Some actions could not be completed. Please reload the page and try again.'));
+        setErrors(
+          getAPIErrorOrDefault(
+            err,
+            'Some actions could not be completed. Please reload the page and try again.'
+          )
+        );
         setSubmitting(false);
       });
   };
